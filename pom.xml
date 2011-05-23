@@ -19,11 +19,6 @@ permissions and limitations under the License.  -->
   <version>1.0-SNAPSHOT</version>
   <name>hibernate-schema-plugin</name>
   <description>Maven plugin for exporting Hibernate schema</description>
-  <scm>
-    <connection>scm:git:git://github.com/vecnatechnologies/hibernate-schema-plugin.git</connection>
-    <url>scm:git:git://github.com/vecnatechnologies/hibernate-schema-plugin.git</url>
-    <developerConnection>scm:git:git://github.com/vecnatechnologies/hibernate-schema-plugin.git</developerConnection>
-  </scm>
   <organization>
     <name>Vecna Technologies</name>
     <url>http://vecna.com</url>
@@ -35,6 +30,23 @@ permissions and limitations under the License.  -->
       <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
     </license>
   </licenses>
+  <developers>
+    <developer>
+      <id>vecna</id>
+      <name>Vecna Technologies</name>
+      <email>opensource@vecna.com</email>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:git://github.com/vecnatechnologies/hibernate-schema-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:vecnatechnologies/hibernate-schema-plugin.git</developerConnection>
+    <url>https://github.com/vecnatechnologies/hibernate-schema-plugin</url>
+  </scm>
+  <parent>
+    <groupId>com.vecna.parent</groupId>
+    <artifactId>open-parent-pom</artifactId>
+    <version>1.2</version>
+  </parent>
   <properties>
     <!-- Plexus-injected fields don't start with m_ -->
     <checkstyle.maxAllowedViolations>14</checkstyle.maxAllowedViolations>
@@ -54,7 +66,7 @@ permissions and limitations under the License.  -->
     <dependency>
       <groupId>com.vecna</groupId>
       <artifactId>maven-commons</artifactId>
-      <version>0.0.2-SNAPSHOT</version>
+      <version>0.0.2</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -80,7 +92,7 @@ permissions and limitations under the License.  -->
     <dependency>
       <groupId>com.vecna</groupId>
       <artifactId>dbDiff</artifactId>
-      <version>1.1.1</version>
+      <version>1.1.2</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
