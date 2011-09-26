@@ -150,7 +150,7 @@ public abstract class HibernateSchemaMojo extends BuildClassPathMojo {
 
     if (additionalMappings != null) {
       for (String mapping : additionalMappings) {
-        configuration.addFile(mapping);
+        configuration.addURL(getURL(mapping));
       }
     }
 
