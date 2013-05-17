@@ -91,6 +91,12 @@ public abstract class HibernateSchemaMojo extends BuildClassPathMojo {
   private String namingStrategy;
 
   /**
+   * Skip execution
+   * @parameter
+   */
+  private boolean skip;
+
+  /**
    * {@inheritDoc}
    */
   @Override
@@ -184,9 +190,13 @@ public abstract class HibernateSchemaMojo extends BuildClassPathMojo {
    * {@inheritDoc}
    */
   @Override
-  protected void executeWithClassLoader() throws MojoExecutionException, MojoFailureException {
-    Configuration configuration = createMappings();
-    executeWithMappings(configuration);
+  protected final void executeWithClassLoader() throws MojoExecutionException, MojoFailureException {
+    if (!skip) {
+      Configuration configuration = createMappings();
+      executeWithMappings(configuration);
+    } else {
+      getLog().info("skipping execution");
+    }
   }
 
   /**

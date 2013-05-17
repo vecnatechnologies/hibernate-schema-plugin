@@ -61,6 +61,8 @@ Goals
 * __export:__ export the Hibernate schema into a file and/or a live database
 * __validate:__ validate the Hibernate configuration against a live database
 * __update:__ generate update scripts (this goal is very basic - it runs Hibernate's SchemaExport and only handles new columns)
+* __doc:__ generate schema documentation from javadocs
+
 
 Credits
 -------

@@ -52,6 +52,7 @@ import com.thoughtworks.qdox.model.Type;
  * @requiresDependencyResolution
  * @phase compile
  * @goal doc
+ * @threadSafe
  * @author ogolberg@vecna.com
  */
 public class HibernateDocMojo extends HibernateSchemaMojo {
