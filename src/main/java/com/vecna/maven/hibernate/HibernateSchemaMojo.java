@@ -17,6 +17,7 @@
 package com.vecna.maven.hibernate;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
@@ -89,6 +90,12 @@ public abstract class HibernateSchemaMojo extends BuildClassPathMojo {
    * @parameter
    */
   private String namingStrategy;
+
+  /**
+   * Disable auto-detection of Envers.
+   * @parameter
+   */
+  private boolean disableEnvers;
 
   /**
    * Skip execution
@@ -183,7 +190,37 @@ public abstract class HibernateSchemaMojo extends BuildClassPathMojo {
     }
 
     configuration.buildMappings();
+
+    if (!disableEnvers) {
+      if (tryEnableEnvers(configuration)) {
+        getLog().info("Detected Envers");
+      }
+    }
+
     return configuration;
+  }
+
+  /**
+   * Add Envers mappings if Envers is present on the classpath
+   */
+  protected boolean tryEnableEnvers(Configuration configuration) throws MojoExecutionException {
+    Class<?> enversConfigClass;
+
+    try {
+      final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+      enversConfigClass = classLoader.loadClass("org.hibernate.envers.configuration.AuditConfiguration");
+    } catch (ClassNotFoundException e) {
+      return false;
+    }
+
+    try {
+      Method getFor = enversConfigClass.getMethod("getFor", Configuration.class);
+      getFor.invoke(null, configuration);
+    } catch (Exception e) {
+      throw new MojoExecutionException("Unexpected error while creating the Envers configuration", e);
+    }
+
+    return true;
   }
 
   /**

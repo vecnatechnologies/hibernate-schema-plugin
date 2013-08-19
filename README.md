@@ -10,6 +10,7 @@ Features
 --------
 
 * Hibernate 4 support
+* Envers support/detection
 * Support for multiple cfg.xml
 * Mapped classes and hbm.xml can be specified in the cfg.xml and/or as plugin properties
 * Hibernate properties can be supplied by one or more .properties files and/or as plugin properties
