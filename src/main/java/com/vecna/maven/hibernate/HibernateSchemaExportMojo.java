@@ -52,9 +52,6 @@ public class HibernateSchemaExportMojo extends HibernateSchemaOutputMojo {
       schemaExport.setDelimiter(delimiter);
     }
 
-    if (drop) {
-      schemaExport.drop(print, export);
-    }
-    schemaExport.create(print, export);
+    schemaExport.execute(print, export, false, !drop);
   }
 }
