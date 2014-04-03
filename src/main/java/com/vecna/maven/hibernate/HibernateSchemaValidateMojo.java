@@ -21,6 +21,9 @@ import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.hibernate.cfg.Configuration;
 
 import com.vecna.dbDiff.business.dbCompare.impl.RdbCompareError;
@@ -31,12 +34,12 @@ import com.vecna.dbDiff.model.relationalDb.RelationalValidationException;
 /**
  * Validates a live DB schema against Hibernate mappings.
  *
- * @requiresDependencyResolution
- * @phase compile
- * @goal validate
- * @threadSafe
  * @author ogolberg@vecna.com
  */
+@Mojo(name = "validate",
+      defaultPhase = LifecyclePhase.COMPILE,
+      requiresDependencyResolution = ResolutionScope.RUNTIME,
+      threadSafe = true)
 public class HibernateSchemaValidateMojo extends HibernateSchemaMojo {
   /**
    * Validates the schema.

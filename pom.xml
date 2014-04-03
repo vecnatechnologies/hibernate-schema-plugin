@@ -45,20 +45,29 @@ permissions and limitations under the License.  -->
   <parent>
     <groupId>com.vecna.parent</groupId>
     <artifactId>open-parent-pom</artifactId>
-    <version>1.2</version>
+    <version>2.0</version>
   </parent>
-  <properties>
-    <!-- Plexus-injected fields don't start with m_ -->
-    <checkstyle.maxAllowedViolations>14</checkstyle.maxAllowedViolations>
-  </properties>
   <build>
     <plugins>
       <plugin>
         <artifactId>maven-plugin-plugin</artifactId>
-        <version>2.3</version>
+        <version>3.2</version>
         <configuration>
           <goalPrefix>hibernate-schema</goalPrefix>
+          <skip>true</skip>
         </configuration>
+        <executions>
+          <execution>
+            <id>mojo-descriptor</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>descriptor</goal>
+            </goals>
+            <configuration>
+              <skip>false</skip>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
@@ -67,28 +76,21 @@ permissions and limitations under the License.  -->
       <groupId>com.vecna</groupId>
       <artifactId>maven-commons</artifactId>
       <version>0.0.2</version>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-core</artifactId>
       <version>4.2.6.Final</version>
-      <type>jar</type>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>1.5.8</version>
-      <type>jar</type>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.vecna</groupId>
       <artifactId>dbDiff-hibernate</artifactId>
-      <version>1.4</version>
-      <type>jar</type>
-      <scope>compile</scope>
+      <version>1.5</version>
     </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
@@ -99,6 +101,12 @@ permissions and limitations under the License.  -->
       <groupId>com.thoughtworks.qdox</groupId>
       <artifactId>qdox</artifactId>
       <version>1.12</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.plugin-tools</groupId>
+      <artifactId>maven-plugin-annotations</artifactId>
+      <version>3.2</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>

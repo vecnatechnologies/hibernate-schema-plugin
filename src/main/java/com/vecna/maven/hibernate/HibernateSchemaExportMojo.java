@@ -18,23 +18,27 @@ package com.vecna.maven.hibernate;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
 /**
  * Exports Hibernate schema to a file or live DB.
  *
- * @requiresDependencyResolution
- * @phase compile
- * @goal export
- * @threadSafe
  * @author ogolberg@vecna.com
  */
+@Mojo(name = "export",
+      defaultPhase = LifecyclePhase.COMPILE,
+      requiresDependencyResolution = ResolutionScope.RUNTIME,
+      threadSafe = true)
 public class HibernateSchemaExportMojo extends HibernateSchemaOutputMojo {
   /**
    * Whether to execute drop SQL statements before creating the schema.
-   * @parameter
    */
+  @Parameter
   private boolean drop = true;
 
   /**

@@ -24,6 +24,8 @@ import java.util.Properties;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.PropertyUtils;
 import org.hibernate.cfg.AnnotationConfiguration;
@@ -49,58 +51,56 @@ import com.vecna.maven.commons.BuildClassPathMojo;
 public abstract class HibernateSchemaMojo extends BuildClassPathMojo {
   /**
    * Reference to the maven project. Internal.
-   * @parameter expression="${project}"
-   * @required
-   * @readonly
    */
+  @Component
   private MavenProject project;
 
   /**
    * Hibernate config (hibernate.cfg.xml) files. Can be filesystem or classpath resources.
-   * @parameter
    */
+  @Parameter
   private String[] configFiles;
 
   /**
    * Hibernate property (hibernate.properties) files. Can be filesystem or classpath resources.
-   * @parameter
    */
+  @Parameter
   private String[] propertyFiles;
 
   /**
    * Additional mapping resources (hbm.xml).
-   * @parameter
    */
+  @Parameter
   private String[] additionalMappings;
 
   /**
    * Additional classes to be mapped (in addition to the ones specified in Hibernate configuration files).
-   * @parameter
    */
+  @Parameter
   private String[] additionalClasses;
 
   /**
    * Hibernate properties (override properties retrieved from property files).
-   * @parameter
    */
+  @Parameter
   private Properties properties;
 
   /**
    * The naming strategy to use (class name).
-   * @parameter
    */
+  @Parameter
   private String namingStrategy;
 
   /**
    * Disable auto-detection of Envers.
-   * @parameter
    */
+  @Parameter
   private boolean disableEnvers;
 
   /**
-   * Skip execution
-   * @parameter
+   * Skip execution.
    */
+  @Parameter
   private boolean skip;
 
   /**
@@ -181,7 +181,7 @@ public abstract class HibernateSchemaMojo extends BuildClassPathMojo {
 
     if (namingStrategy != null) {
       try {
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings("rawtypes")
         Class nsClass = Thread.currentThread().getContextClassLoader().loadClass(namingStrategy);
         configuration.setNamingStrategy((NamingStrategy) nsClass.newInstance());
       } catch (Exception e) {
@@ -202,6 +202,9 @@ public abstract class HibernateSchemaMojo extends BuildClassPathMojo {
 
   /**
    * Add Envers mappings if Envers is present on the classpath
+   * @param configuration hibernate configuration.
+   * @return whether Envers has been detected on the classpath and Envers schema support has been successfully activated.
+   * @throws MojoExecutionException if encountered an incompatible version of the Envers API.
    */
   protected boolean tryEnableEnvers(Configuration configuration) throws MojoExecutionException {
     Class<?> enversConfigClass;

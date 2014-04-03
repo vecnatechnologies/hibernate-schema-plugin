@@ -18,18 +18,21 @@ package com.vecna.maven.hibernate;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaUpdate;
 
 /**
  * Compares Hibernate schema against a live DB and outputs changes to a file or the DB.
  *
- * @requiresDependencyResolution
- * @phase compile
- * @goal update
- * @threadSafe
  * @author ogolberg@vecna.com
  */
+@Mojo(name = "update",
+      defaultPhase = LifecyclePhase.COMPILE,
+      requiresDependencyResolution = ResolutionScope.RUNTIME,
+      threadSafe = true)
 public class HibernateSchemaUpdateMojo extends HibernateSchemaOutputMojo {
   /**
    * Generates upgrade script for the schema.

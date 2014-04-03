@@ -6,7 +6,7 @@
  * obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.FileUtils;
 
 /**
@@ -29,32 +30,32 @@ import org.codehaus.plexus.util.FileUtils;
 public abstract class HibernateSchemaOutputMojo extends HibernateSchemaMojo {
   /**
    * Output file for SQL code.
-   * @parameter
    */
+  @Parameter
   protected String outputFile;
 
   /**
    * Whether to format the output.
-   * @parameter
    */
+  @Parameter
   protected boolean format = false;
 
   /**
    * The delimiter to use for SQL code. Default is semicolon.
-   * @parameter
    */
+  @Parameter
   protected String delimiter = ";";
 
   /**
    * Whether to modify the live DB.
-   * @parameter
    */
+  @Parameter
   protected boolean export = true;
 
   /**
    * Whether to enable output to stdout.
-   * @parameter
    */
+  @Parameter
   protected boolean print = true;
 
   /**

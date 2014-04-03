@@ -26,6 +26,10 @@ import java.util.Iterator;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.codehaus.plexus.util.FileUtils;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.mapping.Collection;
@@ -49,26 +53,29 @@ import com.thoughtworks.qdox.model.Type;
 /**
  * Generates schema documentation. This plugin enhances the Hibernate model with documentation extracted from the javadocs
  * (sources must be provided). Then it feeds the Hibernate model into the Hibernate Tools DocExporter.
- * @requiresDependencyResolution
- * @phase compile
- * @goal doc
- * @threadSafe
  * @author ogolberg@vecna.com
  */
+@Mojo(name = "doc",
+      defaultPhase = LifecyclePhase.COMPILE,
+      requiresDependencyResolution = ResolutionScope.RUNTIME,
+      threadSafe = true)
 public class HibernateDocMojo extends HibernateSchemaMojo {
   /**
-   * @parameter output directory
+   * Output directory for schema documentation.
    */
+  @Parameter
   private File outputDir;
 
   /**
-   * @parameter source directories
+   * Directories that contain the source code for persistent classes.
    */
+  @Parameter
   private File[] sourceDirs = new File[0];
 
   /**
-   * @parameter regex for figuring out which columns are encrypted (full name of the Hibernate type must match)
+   * A regex for figuring out which columns are encrypted (the full name of the Hibernate type must match this).
    */
+  @Parameter
   private String encryptedTypeRegex;
 
   /**
@@ -88,6 +95,7 @@ public class HibernateDocMojo extends HibernateSchemaMojo {
 
   /**
    * @return javadoc types from java types (for looking up method javadocs by signature)
+   * @param classes java types
    */
   private Type[] getJavaDocTypes(Class<?>[] classes) {
     com.thoughtworks.qdox.model.Type[] types = new com.thoughtworks.qdox.model.Type[classes.length];
@@ -99,6 +107,9 @@ public class HibernateDocMojo extends HibernateSchemaMojo {
 
   /**
    * @return javadocs for a simple Hibernate property
+   * @param property hibernate property
+   * @param cls the class that owns the property
+   * @param javaClass javadoc model for the class
    */
   private String getSimpleValueJavadoc(Property property, Class<?> cls, JavaClass javaClass) {
     Getter getter = property.getGetter(cls);
@@ -130,7 +141,9 @@ public class HibernateDocMojo extends HibernateSchemaMojo {
   }
 
   /**
-   * set a comment on Hibernate columns
+   * set a comment on Hibernate columns.
+   * @param comment the comment to set.
+   * @param columnIterator hibernate column iterator.
    */
   private void setComment(String comment, Iterator<Column> columnIterator) {
     while (columnIterator.hasNext()) {
@@ -147,6 +160,8 @@ public class HibernateDocMojo extends HibernateSchemaMojo {
 
   /**
    * set a comment on Hibernate columns mapped to a property
+   * @param comment the comment to set
+   * @param prop hibernate property
    */
   private void setComment(String comment, Property prop) {
     @SuppressWarnings("unchecked") Iterator<Column> columnIterator = prop.getColumnIterator();
@@ -155,6 +170,9 @@ public class HibernateDocMojo extends HibernateSchemaMojo {
 
   /**
    * concatenate javadoc comments for nested properties
+   * @param comment the comment to add to the javadoc
+   * @param accumulatedJavadoc the comment for the parent property
+   * @return combined comment
    */
   private String accumulateJavadoc(String comment, String accumulatedJavadoc) {
     if (comment == null) {
@@ -172,6 +190,8 @@ public class HibernateDocMojo extends HibernateSchemaMojo {
    * Populate Hibernate properties with comments from javadocs (including nested properties).
    * @param propertyIterator iterator over top-level properties
    * @param accumulatedJavadoc comments accumulated so far (for nested properties)
+   * @param cls the class to introspect.
+   * @param javaDocs javadocs for all classes.
    */
   private void processProperties(Iterator<Property> propertyIterator, Class<?> cls,
                                  JavaDocBuilder javaDocs, String accumulatedJavadoc) {
@@ -224,6 +244,8 @@ public class HibernateDocMojo extends HibernateSchemaMojo {
 
   /**
    * Populate table/column comments in a Hibernate model from javadocs
+   * @param configuration hibernate configuration.
+   * @param javaDocs javadoc model for all classes.
    */
   private void populateCommentsFromJavadocs(Configuration configuration, JavaDocBuilder javaDocs) {
     Iterator<PersistentClass> mappedClasses = configuration.getClassMappings();
@@ -261,9 +283,6 @@ public class HibernateDocMojo extends HibernateSchemaMojo {
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   protected void executeWithMappings(Configuration configuration) throws MojoExecutionException, MojoFailureException {
     populateCommentsFromJavadocs(configuration, findJavadocs());
