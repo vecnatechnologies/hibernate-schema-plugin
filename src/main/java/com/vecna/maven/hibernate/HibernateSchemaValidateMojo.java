@@ -29,7 +29,7 @@ import org.hibernate.cfg.Configuration;
 import com.vecna.dbDiff.business.dbCompare.impl.RdbCompareError;
 import com.vecna.dbDiff.business.dbCompare.impl.RdbCompareErrorType;
 import com.vecna.dbDiff.hibernate.HibernateSchemaValidator;
-import com.vecna.dbDiff.model.relationalDb.RelationalValidationException;
+import com.vecna.dbDiff.model.relationalDb.InconsistentSchemaException;
 
 /**
  * Validates a live DB schema against Hibernate mappings.
@@ -51,9 +51,7 @@ public class HibernateSchemaValidateMojo extends HibernateSchemaMojo {
 
     try {
       errors = new HibernateSchemaValidator(configuration).validate();
-    } catch (RelationalValidationException e) {
-      throw new MojoExecutionException("failed to compare hibernate schema to live schema", e);
-    } catch (SQLException e) {
+    } catch (InconsistentSchemaException | SQLException e) {
       throw new MojoExecutionException("failed to compare hibernate schema to live schema", e);
     }
 
